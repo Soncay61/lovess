@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benimle Evlenir Misin?</title>
+    <title>Örnek Tasarım - DreamWeb</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 </head>
 <body>
     
@@ -19,7 +19,7 @@
                     <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" alt="Tektaş Yüzük" class="ring-img">
                 </div>
                 
-                <h1 class="title" id="mainTitle">Yükleniyor...</h1>
+                <h1 class="title" id="mainTitle">Benimle Evlenir Misin?</h1>
                 <p class="subtitle">Ömrümün geri kalanı olur musun?</p>
             </div>
             
@@ -33,178 +33,136 @@
     <div class="gallery-container" style="display: none;">
         <div class="box">
             <div class="dream" id="photoGallery">
-                </div>
+                <span style="--i:1"><img src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:2"><img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:3"><img src="https://images.pexels.com/photos/3352398/pexels-photo-3352398.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:4"><img src="https://images.pexels.com/photos/2910309/pexels-photo-2910309.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:5"><img src="https://images.pexels.com/photos/1417255/pexels-photo-1417255.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:6"><img src="https://images.pexels.com/photos/1839564/pexels-photo-1839564.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:7"><img src="https://images.pexels.com/photos/935789/pexels-photo-935789.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+                <span style="--i:8"><img src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            </div>
         </div>
     </div>
         
     <footer>
-        <a href="https://www.instagram.com/soncaybektas/" target="_blank">
-            <i class="fab fa-instagram"></i> Instagram
+        <a href="#" target="_blank">
+            DreamWeb Demo Tasarımı
         </a>
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    <script>
+        // Müzik Linki (Login sayfasındaki piyano müziği)
+        const musicUrl = "https://cdn.pixabay.com/download/audio/2022/02/10/audio_fc8c69707b.mp3?filename=piano-moment-11993.mp3";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCuKzZVAA3K3dtlzxSmIc4h07CyqXMBk5Y",
-            authDomain: "lovespage61.firebaseapp.com",
-            projectId: "lovespage61",
-            storageBucket: "lovespage61.firebasestorage.app",
-            messagingSenderId: "954368938690",
-            appId: "1:954368938690:web:b6880d8524570e6e06a15b",
-            measurementId: "G-DR224E42S8"
-        };
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const card = document.querySelector('.card'); 
+        const mainContainer = document.getElementById('mainCard');
+        const title = document.querySelector('.title');
+        
+        let isYesClicked = false;
+        let escapeCount = 0; 
+        const maxEscapes = 5;
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // --- Verileri Çekme Fonksiyonu ---
-        async function loadSiteData() {
-            // URL'den ?id=XYZ kısmını al
-            const urlParams = new URLSearchParams(window.location.search);
-            const docId = urlParams.get('id');
-
-            // Varsayılan veriler (Eğer ID yoksa bunlar görünsün)
-            let data = {
-                partnerName: "Prenses",
-                proposalMessage: "Sonsuza kadar EVET! 💍",
-                musicUrl: "ses/sess.mp3", // Klasördeki yedek müzik
-                images: ["fotolar/1.jpg", "fotolar/2.jpg", "fotolar/3.jpg", "fotolar/4.jpg", "fotolar/5.jpg", "fotolar/6.jpg", "fotolar/7.jpg", "fotolar/8.jpg"]
-            };
-
-            if (docId) {
-                try {
-                    const docRef = doc(db, "proposals", docId);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        data = docSnap.data();
-                        console.log("Veri çekildi:", data);
-                    } else {
-                        console.log("Böyle bir kayıt bulunamadı!");
-                    }
-                } catch (error) {
-                    console.error("Hata:", error);
-                }
-            }
-
-            // 1. İsmi Güncelle
-            document.getElementById('mainTitle').innerText = `Benimle Evlenir Misin ${data.partnerName}?`;
-
-            // 2. Galeriyi Doldur
-            const gallery = document.getElementById('photoGallery');
-            gallery.innerHTML = ''; // Temizle
-            data.images.forEach((imgUrl, index) => {
-                // Sadece 8 tane koyalım
-                if(index < 8) {
-                    const span = document.createElement('span');
-                    span.style.setProperty('--i', index + 1);
-                    const img = document.createElement('img');
-                    img.src = imgUrl;
-                    span.appendChild(img);
-                    gallery.appendChild(span);
-                }
-            });
-
-            // 3. Müzik ve Buton Mantığını Başlat
-            initLogic(data);
-        }
-
-        // --- Buton ve Animasyon Mantığı ---
-        function initLogic(data) {
-            const yesButton = document.getElementById('yesButton');
-            const noButton = document.getElementById('noButton');
-            const card = document.querySelector('.card'); 
-            const mainContainer = document.getElementById('mainCard');
-            const title = document.querySelector('.title');
-            
-            // Kart Ayarı
-            if(card) { card.style.position = "relative"; card.style.overflow = "hidden"; }
-
-            let isYesClicked = false;
-            let escapeCount = 0; 
-            const maxEscapes = 5; 
-
-            // EVET TIKLAMA
-            yesButton.addEventListener('click', function () {
-                if (!isYesClicked) {
-                    isYesClicked = true;
-                    
-                    // Veritabanından gelen müziği çal
-                    const audio = new Audio(data.musicUrl);
-                    audio.volume = 0.5; 
-                    audio.play().catch(e => console.log("Ses hatası (tıklama gerekir):", e));
-
-                    startConfetti();
-
-                    // Veritabanından gelen mesajı yaz
-                    title.innerText = data.proposalMessage;
-                    document.querySelector('.subtitle').textContent = 'Seni dünyanın en mutlu insanı yapacağım...';
-                    
-                    document.querySelector('.buttons').style.display = 'none';
-                    if(noButton) noButton.style.display = 'none'; 
-
-                    // Galeriye Geç
-                    setTimeout(() => {
-                        mainContainer.style.opacity = "0";
-                        const galleryCont = document.querySelector('.gallery-container');
-                        galleryCont.style.display = 'flex'; 
-                        setTimeout(() => {
-                            galleryCont.style.opacity = "1";
-                            mainContainer.style.display = "none"; 
-                        }, 500);
-                    }, 3000); 
-                }
-            });
-
-            // HAYIR KAÇMA (Değişmedi)
-            function moveButton() {
-                escapeCount++; 
-                if (escapeCount >= maxEscapes) {
-                    noButton.style.opacity = "0";
-                    noButton.style.transform = "scale(0)";
-                    setTimeout(() => { noButton.style.display = 'none'; }, 500);
-                    title.innerText = "Naz yapma prenses, takacağım o yüzüğü 😉";
-                    return; 
-                }
-                if (noButton.parentElement !== card) card.appendChild(noButton);
+        // --- EVET BUTONU TIKLANINCA ---
+        yesButton.addEventListener('click', function () {
+            if (!isYesClicked) {
+                isYesClicked = true;
                 
-                const padding = 40; 
-                const cardRect = card.getBoundingClientRect();
-                const maxWidth = cardRect.width - noButton.offsetWidth - padding;
-                const maxHeight = cardRect.height - noButton.offsetHeight - padding;
-                const randomX = Math.max(padding, Math.random() * maxWidth);
-                const randomY = Math.max(padding, Math.random() * maxHeight);
+                // 1. Müziği Çal
+                const audio = new Audio(musicUrl);
+                audio.volume = 0.6; 
+                audio.play().catch(e => console.log("Ses hatası (Tarayıcı engeli olabilir):", e));
 
-                noButton.style.position = 'absolute'; 
-                noButton.style.left = randomX + 'px';
-                noButton.style.top = randomY + 'px';
+                // 2. Konfeti Patlat
+                startConfetti();
+
+                // 3. Yazıları Değiştir
+                title.innerText = "Sonsuza Kadar EVET! 💍";
+                document.querySelector('.subtitle').textContent = 'Seni dünyanın en mutlu insanı yapacağım...';
+                
+                // 4. Butonları Gizle
+                document.querySelector('.buttons').style.display = 'none';
+                if(noButton) noButton.style.display = 'none'; 
+
+                // 5. Galeriye Geçiş Animasyonu
+                setTimeout(() => {
+                    // Kartı yavaşça yok et
+                    mainContainer.style.opacity = "0"; 
+                    
+                    const galleryCont = document.querySelector('.gallery-container');
+                    galleryCont.style.display = 'flex'; // Galeriyi görünür yap (ama şeffaf)
+                    
+                    // Galeriyi yavaşça netleştir
+                    setTimeout(() => {
+                        galleryCont.style.opacity = "1";
+                        mainContainer.style.display = "none"; // Kartı tamamen kaldır
+                    }, 500);
+                }, 3000); // 3 saniye bekle (yazıyı okusun)
             }
+        });
 
-            noButton.addEventListener('mouseover', moveButton);
-            noButton.addEventListener('click', (e) => { e.preventDefault(); moveButton(); });
-            noButton.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+        // --- HAYIR BUTONU (KAÇMA EFEKTİ) ---
+        function moveButton() {
+            escapeCount++; 
+            if (escapeCount >= maxEscapes) {
+                // 5 kere kaçtıktan sonra yok ol
+                noButton.style.opacity = "0";
+                noButton.style.transform = "scale(0)";
+                setTimeout(() => { noButton.style.display = 'none'; }, 500);
+                title.innerText = "Naz yapma prenses, bas şu butona! 😉";
+                return; 
+            }
+            
+            // Kartın dışına taşmasın diye hesaplama
+            if (noButton.parentElement !== card) card.appendChild(noButton);
+            
+            const padding = 20; 
+            const cardRect = card.getBoundingClientRect();
+            // Butonun gidebileceği maksimum alan
+            const maxWidth = cardRect.width - 120; 
+            const maxHeight = cardRect.height - 60;
+
+            const randomX = Math.max(padding, Math.random() * maxWidth);
+            const randomY = Math.max(padding, Math.random() * maxHeight);
+
+            noButton.style.position = 'absolute'; 
+            noButton.style.left = randomX + 'px';
+            noButton.style.top = randomY + 'px';
         }
 
-        // KALP KONFETİ
+        // Fareyle üzerine gelince veya tıklayınca kaç
+        noButton.addEventListener('mouseover', moveButton);
+        noButton.addEventListener('click', (e) => { e.preventDefault(); moveButton(); });
+        noButton.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+
+        // --- GELİŞMİŞ KONFETİ EFEKTİ (Süzülerek Düşen) ---
         function startConfetti() {
             for(let i = 0; i < 50; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
-                    heart.innerHTML = '💍'; 
+                    heart.innerHTML = '💍'; // İstersen ❤️ yapabilirsin
+                    
+                    // Rastgele Konum (Ekranın sağından soluna her yerinden)
                     heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.fontSize = Math.random() * 20 + 20 + 'px'; 
-                    heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                    
+                    // Rastgele Hız
+                    const duration = Math.random() * 3 + 2;
+                    heart.style.animationDuration = duration + 's';
+                    
+                    // Rastgele Boyut
+                    const size = Math.random() * 20 + 20;
+                    heart.style.fontSize = size + 'px';
+
                     document.body.appendChild(heart);
-                    setTimeout(() => { heart.remove(); }, 5000);
-                }, i * 100); 
+                    
+                    // Temizlik (Animasyon bitince sil)
+                    setTimeout(() => { heart.remove(); }, duration * 1000);
+                }, i * 150); 
             }
         }
-
-        // Sayfa açılınca verileri yükle
-        window.addEventListener('DOMContentLoaded', loadSiteData);
     </script>
 </body>
 </html>
