@@ -13,11 +13,11 @@
             height: 100vh;
             width: 100%;
             overflow: hidden;
-            background: #000; /* 3D efekt karanlıkta güzel durur */
+            background: #000; /* Karanlık mod 3D için en iyisidir */
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px; /* 3D Derinlik */
+            perspective: 1000px; /* 3D derinlik */
         }
 
         /* --- 3D DÖNEN GALERİ (ARKAPLAN) --- */
@@ -26,8 +26,8 @@
             width: 200px;
             height: 200px;
             transform-style: preserve-3d;
-            transform: rotateX(-20deg); /* Hafif yukarıdan bakış */
-            z-index: 1; /* En arkada */
+            transform: rotateX(-10deg); /* Hafif açı veriyoruz */
+            z-index: 1; /* En arkada dursun */
             animation: fadeIn 2s ease-out;
         }
 
@@ -50,8 +50,8 @@
             width: 100%; height: 100%;
             transform-origin: center;
             transform-style: preserve-3d;
-            /* 8 Fotoğrafı daire şeklinde diziyoruz (400px genişlikte) */
-            transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px);
+            /* 8 Fotoğrafı geniş bir daireye yayıyoruz (450px) */
+            transform: rotateY(calc(var(--i) * 45deg)) translateZ(450px);
         }
 
         .dream span img {
@@ -66,26 +66,18 @@
             -webkit-box-reflect: below 5px linear-gradient(transparent, transparent, rgba(0,0,0,0.2));
         }
 
-        /* --- KARARTMA & FORM --- */
-        .overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); /* Arkaplanı biraz karart */
-            z-index: 5;
-            backdrop-filter: blur(3px); /* Hafif bulanıklık ki form okunsun */
-        }
-
+        /* --- FORM KUTUSU (ŞEFFAF VE KİBAR) --- */
         .auth-card {
             position: relative;
             z-index: 10; /* En önde */
-            background: rgba(255, 255, 255, 0.1); /* Cam Efekti */
-            backdrop-filter: blur(15px);
+            /* Şeffaf Arkaplan */
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(5px); /* Arkadaki resimleri hafif buzla */
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 350px; /* Genişliği azalttık ki arkayı kapatmasın */
             text-align: center;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             color: white;
@@ -95,30 +87,30 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        h2 { margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; }
+        h2 { margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; font-size: 24px; }
 
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group input {
-            width: 100%; padding: 15px;
-            background: rgba(255,255,255,0.1);
+            width: 100%; padding: 12px;
+            background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.3);
             border-radius: 10px;
-            color: white; font-size: 16px; outline: none; transition: 0.3s;
+            color: white; font-size: 14px; outline: none; transition: 0.3s;
         }
         .input-group input::placeholder { color: rgba(255,255,255,0.7); }
-        .input-group input:focus { border-color: #667eea; background: rgba(255,255,255,0.2); }
+        .input-group input:focus { border-color: #667eea; background: rgba(255,255,255,0.25); }
 
         .btn-main {
-            width: 100%; padding: 15px;
+            width: 100%; padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; border: none; border-radius: 10px;
             font-size: 16px; font-weight: 600; cursor: pointer;
             margin-top: 10px; transition: 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .btn-main:hover { transform: scale(1.02); }
+        .btn-main:hover { transform: scale(1.02); background: linear-gradient(135deg, #5a6fd1 0%, #633e8a 100%); }
 
-        .divider { margin: 20px 0; color: rgba(255,255,255,0.6); font-size: 14px; display: flex; align-items: center; }
+        .divider { margin: 20px 0; color: rgba(255,255,255,0.6); font-size: 12px; display: flex; align-items: center; }
         .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.3); }
         .divider span { padding: 0 10px; }
 
@@ -127,24 +119,32 @@
             background: white; color: #333; border: none;
             border-radius: 10px; font-weight: 600; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: 0.3s;
+            transition: 0.3s; font-size: 14px;
         }
         .btn-google:hover { background: #f0f0f0; }
 
-        .footer-text { margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.8); }
+        .footer-text { margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.8); }
         .footer-text a { color: #fff; text-decoration: none; font-weight: 700; border-bottom: 1px solid white; }
 
-        .error-msg { color: #ff6b6b; font-size: 13px; margin-top: 10px; display: none; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 5px; }
+        .error-msg { color: #ff6b6b; font-size: 13px; margin-top: 10px; display: none; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px; }
 
         /* Müzik Butonu */
         .music-btn {
             position: absolute; bottom: 20px; right: 20px;
-            width: 50px; height: 50px; border-radius: 50%;
+            width: 45px; height: 45px; border-radius: 50%;
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-            color: white; font-size: 20px; cursor: pointer; z-index: 20;
+            color: white; font-size: 18px; cursor: pointer; z-index: 20;
             display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
         .music-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+
+        /* MOBİL UYUM */
+        @media (max-width: 600px) {
+            /* Mobilde çarkı küçültüyoruz ki ekrana sığsın */
+            .dream span { transform: rotateY(calc(var(--i) * 45deg)) translateZ(250px); }
+            .gallery-container { width: 120px; height: 120px; }
+            .auth-card { width: 90%; padding: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -161,8 +161,6 @@
             <span style="--i:8"><img src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
         </div>
     </div>
-
-    <div class="overlay"></div>
 
     <audio id="bgMusic" loop>
         <source src="https://cdn.pixabay.com/download/audio/2022/02/10/audio_fc8c69707b.mp3?filename=piano-moment-11993.mp3" type="audio/mpeg">
@@ -237,7 +235,7 @@
             const btn = document.getElementById('loginBtn');
 
             errorMsg.style.display = 'none';
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kontrol Ediliyor...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
@@ -250,7 +248,7 @@
 
         document.getElementById('googleBtn').addEventListener('click', async () => {
             const btn = document.getElementById('googleBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Google...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
             try {
                 await signInWithPopup(auth, provider);
             } catch (error) {
