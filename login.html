@@ -2,98 +2,220 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş Yap - DreamWeb</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #f0f2f5; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; }
-        .auth-box { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { margin-bottom: 20px; color: #333; }
-        
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        /* Normal Giriş Butonu */
-        .btn-main { width: 100%; padding: 12px; background: #2c3e50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
-        .btn-main:hover { background: #1a252f; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            overflow: hidden; /* Kaydırmayı engelle */
+            position: relative;
+            background-color: #f0f2f5; /* Fallback renk */
+        }
 
-        /* Google Butonu */
-        .btn-google { width: 100%; padding: 12px; background: #fff; color: #333; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-google:hover { background: #f1f1f1; border-color: #ccc; }
-        .google-icon { color: #DB4437; font-size: 18px; }
+        /* Arkaplan Resim Galerisi */
+        .background-gallery {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            transition: opacity 1s ease-in-out; /* Resim geçişleri */
+            opacity: 0; /* Başlangıçta gizli */
+        }
+        .background-gallery.active { opacity: 1; }
+        .background-gallery img {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; /* Resimlerin yumuşak geçişi */
+        }
+        .background-gallery img.active { opacity: 1; }
 
-        .divider { margin: 20px 0; border-top: 1px solid #eee; position: relative; }
-        .divider span { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 10px; color: #999; font-size: 12px; }
+        /* Arkaplan Filmi (Renk ve Bulanıklık) */
+        .background-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Koyu film */
+            backdrop-filter: blur(8px); /* Hafif bulanıklık */
+            z-index: 1;
+        }
+
+        /* Form Kapsayıcı */
+        .auth-container {
+            position: relative;
+            z-index: 2; /* Arkaplanın üzerinde dursun */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95); /* Hafif şeffaf beyaz */
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-style {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        .input-style:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background-color: #fff;
+            outline: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.3);
+            margin-bottom: 20px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+        }
+        .btn-primary:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #aaa;
+            margin: 25px 0;
+            font-size: 14px;
+        }
+        .or-divider::before, .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #eee;
+        }
+        .or-divider:not(:empty)::before { margin-right: .5em; }
+        .or-divider:not(:empty)::after { margin-left: .5em; }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
+        }
+        .btn-google:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3);
+        }
+        .btn-google .google-icon {
+            margin-right: 10px;
+        }
+        .btn-google:disabled {
+            background-color: #aabfec;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .auth-card p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 25px;
+        }
+        .auth-card p a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-card p a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        /* Ses Kontrol Butonu */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
+        .audio-control:hover { background: rgba(0,0,0,0.7); }
     </style>
 </head>
 <body>
-    <div class="auth-box">
-        <h2>Giriş Yap</h2>
-        <input type="email" id="email" placeholder="E-posta">
-        <input type="password" id="password" placeholder="Şifre">
-        <button id="loginBtn" class="btn-main">Giriş Yap</button>
-        
-        <div class="divider"><span>VEYA</span></div>
 
-        <button id="googleBtn" class="btn-google">
-            <i class="fab fa-google google-icon"></i> Google ile Devam Et
-        </button>
-
-        <p id="errorMsg" style="color:red; font-size:13px; margin-top:10px;"></p>
-        <p style="margin-top:15px; font-size:14px;">Hesabın yok mu? <a href="register.html">Kayıt Ol</a></p>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        // GoogleAuthProvider ve signInWithPopup ekledik
-        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-        const firebaseConfig = { apiKey: "AIzaSyCuKzZVAA3K3dtlzxSmIc4h07CyqXMBk5Y", authDomain: "lovespage61.firebaseapp.com", projectId: "lovespage61", storageBucket: "lovespage61.firebasestorage.app", messagingSenderId: "954368938690", appId: "1:954368938690:web:b6880d8524570e6e06a15b", measurementId: "G-DR224E42S8" };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider(); // Google Sağlayıcısı
-
-        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "dashboard.html"; });
-
-        // Normal Giriş
-        document.getElementById('loginBtn').addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                document.getElementById('errorMsg').innerText = "Hata: " + error.message;
-            }
-        });
-
-        // Google ile Giriş
-const googleBtn = document.getElementById('googleBtn');
-
-googleBtn.addEventListener('click', async () => {
-    try {
-        // 1. Butonu kilitle (Çift tıklamayı önlemek için)
-        googleBtn.disabled = true;
-        googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bekleniyor...';
-
-        // 2. Pencereyi aç
-        await signInWithPopup(auth, provider);
-        
-        // Başarılı olursa zaten yönlendirme kodu çalışacak
-    } catch (error) {
-        console.error(error);
-        
-        // Hata: "cancelled-popup-request" ise (Kullanıcı kapattıysa) sessiz kal veya uyar
-        if (error.code === 'auth/cancelled-popup-request') {
-            document.getElementById('errorMsg').innerText = "Giriş işlemi iptal edildi.";
-        } else {
-            document.getElementById('errorMsg').innerText = "Hata: " + error.message;
-        }
-
-        // 3. Butonu tekrar aç (Hata aldıysa tekrar deneyebilsin)
-        googleBtn.disabled = false;
-        googleBtn.innerHTML = '<i class="fab fa-google google-icon"></i> Google ile Devam Et';
-    }
-});
-    </script>
-</body>
-</html>
+    <div class="background-gallery" id="backgroundGallery">
+        <img src="https://images.unsplash.com/photo-1517904033622-c6511394f1c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bG92ZSxhZmZlY3Rpb24sbWFycmFnZXx8fHx8fDE2NzEyMzQ1Njc&ixlib=rb-4.0.3&q=80&w=1080" class="active" alt="Aşk fotoğrafı 1">
+        <img src="https://
