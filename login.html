@@ -8,214 +8,256 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
         body {
-            overflow: hidden; /* Kaydırmayı engelle */
-            position: relative;
-            background-color: #f0f2f5; /* Fallback renk */
-        }
-
-        /* Arkaplan Resim Galerisi */
-        .background-gallery {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex;
-            transition: opacity 1s ease-in-out; /* Resim geçişleri */
-            opacity: 0; /* Başlangıçta gizli */
-        }
-        .background-gallery.active { opacity: 1; }
-        .background-gallery img {
-            position: absolute;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out; /* Resimlerin yumuşak geçişi */
-        }
-        .background-gallery img.active { opacity: 1; }
-
-        /* Arkaplan Filmi (Renk ve Bulanıklık) */
-        .background-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Koyu film */
-            backdrop-filter: blur(8px); /* Hafif bulanıklık */
-            z-index: 1;
-        }
-
-        /* Form Kapsayıcı */
-        .auth-container {
-            position: relative;
-            z-index: 2; /* Arkaplanın üzerinde dursun */
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            background: #000; /* 3D efekt karanlıkta güzel durur */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            perspective: 1000px; /* 3D Derinlik */
+        }
+
+        /* --- 3D DÖNEN GALERİ (ARKAPLAN) --- */
+        .gallery-container {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg); /* Hafif yukarıdan bakış */
+            z-index: 1; /* En arkada */
+            animation: fadeIn 2s ease-out;
+        }
+
+        .dream {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: donmeDolap 30s linear infinite; /* Sürekli Dönme */
+        }
+
+        @keyframes donmeDolap {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .dream span {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            transform-origin: center;
+            transform-style: preserve-3d;
+            /* 8 Fotoğrafı daire şeklinde diziyoruz (400px genişlikte) */
+            transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px);
+        }
+
+        .dream span img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            /* Yansıma efekti */
+            -webkit-box-reflect: below 5px linear-gradient(transparent, transparent, rgba(0,0,0,0.2));
+        }
+
+        /* --- KARARTMA & FORM --- */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Arkaplanı biraz karart */
+            z-index: 5;
+            backdrop-filter: blur(3px); /* Hafif bulanıklık ki form okunsun */
         }
 
         .auth-card {
-            background: rgba(255, 255, 255, 0.95); /* Hafif şeffaf beyaz */
-            border-radius: 20px;
+            position: relative;
+            z-index: 10; /* En önde */
+            background: rgba(255, 255, 255, 0.1); /* Cam Efekti */
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 40px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-radius: 20px;
             width: 100%;
             max-width: 400px;
             text-align: center;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .auth-card h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-style {
-            width: 100%;
-            padding: 14px 18px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: #f9f9f9;
-        }
-        .input-style:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            background-color: #fff;
-            outline: none;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.3);
-            margin-bottom: 20px;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
-        }
-        .btn-primary:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            animation: slideUp 1s ease-out;
         }
 
-        .or-divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #aaa;
-            margin: 25px 0;
-            font-size: 14px;
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        h2 { margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group input {
+            width: 100%; padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            color: white; font-size: 16px; outline: none; transition: 0.3s;
         }
-        .or-divider::before, .or-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #eee;
+        .input-group input::placeholder { color: rgba(255,255,255,0.7); }
+        .input-group input:focus { border-color: #667eea; background: rgba(255,255,255,0.2); }
+
+        .btn-main {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 10px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            margin-top: 10px; transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .or-divider:not(:empty)::before { margin-right: .5em; }
-        .or-divider:not(:empty)::after { margin-left: .5em; }
+        .btn-main:hover { transform: scale(1.02); }
+
+        .divider { margin: 20px 0; color: rgba(255,255,255,0.6); font-size: 14px; display: flex; align-items: center; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.3); }
+        .divider span { padding: 0 10px; }
 
         .btn-google {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 14px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+            width: 100%; padding: 12px;
+            background: white; color: #333; border: none;
+            border-radius: 10px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
         }
-        .btn-google:hover {
-            background-color: #357ae8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3);
-        }
-        .btn-google .google-icon {
-            margin-right: 10px;
-        }
-        .btn-google:disabled {
-            background-color: #aabfec;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        .btn-google:hover { background: #f0f0f0; }
 
-        .auth-card p {
-            font-size: 14px;
-            color: #666;
-            margin-top: 25px;
-        }
-        .auth-card p a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .auth-card p a:hover {
-            text-decoration: underline;
-        }
+        .footer-text { margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.8); }
+        .footer-text a { color: #fff; text-decoration: none; font-weight: 700; border-bottom: 1px solid white; }
 
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 15px;
-            font-weight: 500;
-        }
+        .error-msg { color: #ff6b6b; font-size: 13px; margin-top: 10px; display: none; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 5px; }
 
-        /* Ses Kontrol Butonu */
-        .audio-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-            transition: background 0.3s;
+        /* Müzik Butonu */
+        .music-btn {
+            position: absolute; bottom: 20px; right: 20px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+            color: white; font-size: 20px; cursor: pointer; z-index: 20;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
-        .audio-control:hover { background: rgba(0,0,0,0.7); }
+        .music-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-    <div class="background-gallery" id="backgroundGallery">
-        <img src="https://images.unsplash.com/photo-1517904033622-c6511394f1c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bG92ZSxhZmZlY3Rpb24sbWFycmFnZXx8fHx8fDE2NzEyMzQ1Njc&ixlib=rb-4.0.3&q=80&w=1080" class="active" alt="Aşk fotoğrafı 1">
-        <img src="https://
+    <div class="gallery-container">
+        <div class="dream">
+            <span style="--i:1"><img src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:2"><img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:3"><img src="https://images.pexels.com/photos/3352398/pexels-photo-3352398.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:4"><img src="https://images.pexels.com/photos/2910309/pexels-photo-2910309.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:5"><img src="https://images.pexels.com/photos/1417255/pexels-photo-1417255.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:6"><img src="https://images.pexels.com/photos/1839564/pexels-photo-1839564.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:7"><img src="https://images.pexels.com/photos/935789/pexels-photo-935789.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+            <span style="--i:8"><img src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600"></span>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/02/10/audio_fc8c69707b.mp3?filename=piano-moment-11993.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-btn" id="toggleMusic"><i class="fas fa-volume-mute"></i></button>
+
+    <div class="auth-card">
+        <h2>Giriş Yap</h2>
+        
+        <div class="input-group">
+            <input type="email" id="email" placeholder="E-posta Adresi">
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Şifre">
+        </div>
+
+        <button id="loginBtn" class="btn-main">Giriş Yap</button>
+        <p id="errorMsg" class="error-msg"></p>
+
+        <div class="divider"><span>VEYA</span></div>
+
+        <button id="googleBtn" class="btn-google">
+            <i class="fab fa-google" style="color:#DB4437;"></i> Google ile Devam Et
+        </button>
+
+        <p class="footer-text">Hesabın yok mu? <a href="register.html">Kayıt Ol</a></p>
+    </div>
+
+    <script>
+        // Müzik Kontrolü
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('toggleMusic');
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                music.play().catch(e => console.log(e));
+                musicBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        document.body.addEventListener('click', () => {
+            if(!isPlaying) {
+                music.play().catch(() => {});
+                musicBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                isPlaying = true;
+            }
+        }, { once: true });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+        // SENİN AYARLARIN
+        const firebaseConfig = { apiKey: "AIzaSyCuKzZVAA3K3dtlzxSmIc4h07CyqXMBk5Y", authDomain: "lovespage61.firebaseapp.com", projectId: "lovespage61", storageBucket: "lovespage61.firebasestorage.app", messagingSenderId: "954368938690", appId: "1:954368938690:web:b6880d8524570e6e06a15b", measurementId: "G-DR224E42S8" };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "dashboard.html"; });
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const btn = document.getElementById('loginBtn');
+
+            errorMsg.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kontrol Ediliyor...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                btn.innerHTML = 'Giriş Yap';
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "Hata: " + error.message;
+            }
+        });
+
+        document.getElementById('googleBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('googleBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Google...';
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                btn.innerHTML = '<i class="fab fa-google" style="color:#DB4437;"></i> Google ile Devam Et';
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
