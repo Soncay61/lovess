@@ -12,7 +12,7 @@
 <body>
     
     <div id="startOverlay">
-        <button class="start-btn" id="startBtn">Dokun ve Başla ❤️</button>
+        <button class="start-btn" id="startBtn">Sürprizi Başlat ❤️</button>
     </div>
 
     <div class="background-overlay"></div>
@@ -20,7 +20,7 @@
     <div class="container" id="mainCard">
         <div class="card" data-aos="zoom-in" data-aos-duration="1200">
             <div class="content">
-                <div id="iconWrapper" class="ring-animation" data-aos="fade-down" data-aos-delay="400"></div>
+                <div id="iconContainer"></div>
                 
                 <h1 class="title" id="mainTitle"></h1>
                 <p class="subtitle" id="mainSubtitle"></p>
@@ -40,9 +40,7 @@
     </div>
     
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1000, once: true });
-    </script>
+    <script> AOS.init({ duration: 1000, once: true }); </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -61,7 +59,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- DAKTİLO EFEKTİ FONKSİYONU ---
+        // --- DAKTİLO EFEKTİ ---
         function typeWriter(elementId, text, speed, callback) {
             let i = 0;
             const element = document.getElementById(elementId);
@@ -82,11 +80,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const docId = urlParams.get('id');
             
-            // Varsayılan Veriler (Veritabanı yoksa bunlar görünür)
+            // Varsayılan Veriler
             let data = {
                 partnerName: "Sevgilim",
                 proposalMessage: "Sonsuza kadar EVET! 💍",
-                theme: "love", // 'love' veya 'birthday'
+                theme: "love", 
                 musicUrl: "", 
                 images: Array(8).fill("https://via.placeholder.com/600")
             };
@@ -94,31 +92,33 @@
             if (docId) {
                 try {
                     const docSnap = await getDoc(doc(db, "proposals", docId));
-                    if (docSnap.exists()) {
-                        data = docSnap.data();
-                    }
-                } catch (error) { console.error("Veri çekme hatası:", error); }
+                    if (docSnap.exists()) data = docSnap.data();
+                } catch (error) { console.error("Hata:", error); }
             }
 
-            // --- TEMA VE İÇERİK AYARLARI ---
             const isBirthday = data.theme === 'birthday';
 
-            // İkon Seçimi (Pasta veya Yüzük)
+            // İkonu Belirle
             const iconHtml = isBirthday ? 
                 `<div class="cake-wrapper">
                     <div class="flame"></div>
                     <img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'">
                 </div>` : 
-                `<img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">`;
+                `<div class="ring-animation">
+                    <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">
+                </div>`;
             
-            document.getElementById('iconWrapper').innerHTML = iconHtml;
+            document.getElementById('iconContainer').innerHTML = iconHtml;
 
-            // Galeri Fotoğraflarını Yükle
+            // Buton Yazıları
+            document.getElementById('yesButton').innerHTML = isBirthday ? "KUTLA 🎉" : "EVET 💍";
+            document.getElementById('noButton').innerHTML = isBirthday ? "HAYIR 🎂" : "HAYIR 💔";
+
+            // Galeri
             const gallery = document.getElementById('photoGallery');
-            // Eğer resim sayısı 8'den azsa placeholder ile tamamla
-            const imagesToLoad = data.images && data.images.length > 0 ? data.images : Array(8).fill("https://picsum.photos/400/600");
+            const images = (data.images && data.images.length > 0) ? data.images : Array(8).fill("https://picsum.photos/400/600");
             
-            imagesToLoad.forEach((imgUrl, index) => {
+            images.forEach((imgUrl, index) => {
                 if(index < 8) {
                     const span = document.createElement('span');
                     span.style.setProperty('--i', index + 1);
@@ -129,36 +129,29 @@
                 }
             });
 
-            // Buton Metinleri
-            document.getElementById('yesButton').innerHTML = isBirthday ? "KUTLA 🎉" : "EVET 💍";
-            document.getElementById('noButton').innerHTML = isBirthday ? "HAYIR 🎂" : "HAYIR 💔";
-
-            // --- GİRİŞ PERDESİ VE MÜZİK ---
+            // GİRİŞ PERDESİ
             document.getElementById('startBtn').addEventListener('click', () => {
-                // Müziği Başlat
                 if (data.musicUrl) {
                     const audio = new Audio(data.musicUrl);
                     audio.volume = 0.6;
-                    audio.play().catch(e => console.log("Ses çalma hatası:", e));
+                    audio.play().catch(e => console.log("Ses hatası:", e));
                 }
 
-                // Perdeyi Kaldır
                 const overlay = document.getElementById('startOverlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.style.display = 'none', 1000);
 
-                // Daktilo Efekti Başlasın
                 const titleText = isBirthday ? `İyi Ki Doğdun ${data.partnerName}!` : `Benimle Evlenir Misin ${data.partnerName}?`;
                 const subText = isBirthday ? "Nice mutlu yaşlara..." : "Ömrümün geri kalanı olur musun?";
 
                 typeWriter("mainTitle", titleText, 90, () => {
                     typeWriter("mainSubtitle", subText, 50, () => {
-                        // Yazılar bitince butonlar görünsün
                         document.getElementById('btnGroup').style.opacity = '1';
                     });
                 });
             });
 
+            // TROLL BUTON & FİNAL
             initLogic(data, isBirthday);
         }
 
@@ -171,20 +164,14 @@
             
             let isYesClicked = false;
             let escapeCount = 0; 
-
-            // Troll Hayır Butonu Sözleri
             const noTexts = isBirthday ? 
                 ["Emin misin?", "Pasta eridi!", "Yapma be!", "Hadi üfle!", "Tamam pes :)"] : 
                 ["Emin misin?", "Bir daha düşün?", "Son kararın mı?", "Kırma kalbimi...", "Basamazsın ki :)"];
 
-            // --- EVET BUTONU ---
             yesButton.addEventListener('click', function () {
                 if (!isYesClicked) {
                     isYesClicked = true;
-                    
-                    // Havai Fişek / Konfeti
                     startConfetti(isBirthday ? '🎉' : '❤️');
-                    
                     title.innerText = data.proposalMessage;
                     document.getElementById('mainSubtitle').innerText = isBirthday ? "İyi ki varsın!" : 'Seni dünyanın en mutlu insanı yapacağım...';
                     document.getElementById('btnGroup').style.display = 'none';
@@ -201,21 +188,15 @@
                 }
             });
 
-            // --- HAYIR BUTONU KAÇIRMA ---
             function moveButton() {
                 if (escapeCount < 5) {
-                    // Yazıyı değiştir
                     noButton.innerText = noTexts[escapeCount];
-                    
                     const rect = card.getBoundingClientRect();
-                    // Rastgele koordinat (Kartın dışına çıkmasın diye sınırlandı)
                     const x = Math.max(10, Math.random() * (rect.width - 120));
                     const y = Math.max(10, Math.random() * (rect.height - 50));
-                    
                     noButton.style.position = 'absolute'; 
                     noButton.style.left = x + 'px'; 
                     noButton.style.top = y + 'px';
-                    
                     escapeCount++; 
                 } else {
                     noButton.style.display = 'none'; 
