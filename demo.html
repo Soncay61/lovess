@@ -20,7 +20,7 @@
     <div class="container" id="mainCard">
         <div class="card" data-aos="zoom-in" data-aos-duration="1200">
             <div class="content">
-                <div id="iconContainer">
+                <div id="iconWrapper" class="ring-animation" data-aos="fade-down" data-aos-delay="400">
                     </div>
                 
                 <h1 class="title" id="mainTitle"></h1>
@@ -44,7 +44,7 @@
     <script> AOS.init({ duration: 1000, once: true }); </script>
 
     <script>
-        // --- DAKTİLO EFEKTİ FONKSİYONU ---
+        // --- DAKTİLO EFEKTİ ---
         function typeWriter(elementId, text, speed, callback) {
             let i = 0;
             const element = document.getElementById(elementId);
@@ -61,12 +61,13 @@
             type();
         }
 
+        // SAYFA YÜKLENİNCE
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('type'); 
             const isBirthday = (type === 'birthday');
 
-            // --- AYARLAR (İKİ MOD İÇİN DE PRO İÇERİK) ---
+            // --- AYARLAR ---
             const config = {
                 title: isBirthday ? "İyi Ki Doğdun Prenses!" : "Benimle Evlenir Misin?",
                 subtitle: isBirthday ? "Yeni yaşın sana huzur ve mutluluk getirsin..." : "Ömrümün geri kalanı olur musun?",
@@ -74,30 +75,35 @@
                 btnYesText: isBirthday ? "KUTLA 🎉" : "EVET 💍",
                 btnNoText: isBirthday ? "HAYIR 🎂" : "HAYIR 💔",
                 emoji: isBirthday ? '🎉' : '❤️',
-                // İKON AYARLARI (Class'lar style.css ile uyumlu)
+                // İKON AYARLARI (Pastada özel div, Yüzükte direkt resim)
                 iconHtml: isBirthday ? 
                     `<div class="cake-wrapper">
                         <div class="flame"></div>
                         <img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'">
                     </div>` : 
-                    `<div class="ring-animation">
-                        <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">
-                    </div>`
+                    `<img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">`
             };
 
-            // HTML Elementleri
+            // HTML Elementlerini Tanımla
             const mainTitle = document.getElementById('mainTitle');
             const mainSubtitle = document.getElementById('mainSubtitle');
-            const iconContainer = document.getElementById('iconContainer');
+            const iconWrapper = document.getElementById('iconWrapper');
             const yesButton = document.getElementById('yesButton');
             const noButton = document.getElementById('noButton');
             const photoGallery = document.getElementById('photoGallery');
             const card = document.querySelector('.card');
 
             // İkonu ve Butonları Yerleştir
-            iconContainer.innerHTML = config.iconHtml;
+            iconWrapper.innerHTML = config.iconHtml;
             yesButton.innerHTML = config.btnYesText;
             noButton.innerHTML = config.btnNoText;
+            
+            // Eğer Doğum Günü ise dıştaki ring-animation class'ını kaldır (Çift animasyon olmasın)
+            if(isBirthday) {
+                iconWrapper.classList.remove('ring-animation');
+            } else {
+                iconWrapper.classList.add('ring-animation');
+            }
 
             // Galeriyi Doldur
             for (let i = 1; i <= 8; i++) {
@@ -109,16 +115,16 @@
                 photoGallery.appendChild(span);
             }
 
-            // --- GİRİŞ EKRANI (HER İKİSİ İÇİN DE ÇALIŞIR) ---
+            // --- GİRİŞ EKRANI & MÜZİK BAŞLATMA ---
             document.getElementById('startBtn').addEventListener('click', () => {
-                // Demo olduğu için ses dosyası simülasyonu
+                // Burada demo olduğu için ses dosyası çalma simülasyonu yapılır
                 // const audio = new Audio('music.mp3'); audio.play();
 
                 const overlay = document.getElementById('startOverlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.style.display = 'none', 1000);
 
-                // Daktilo Efekti Başlar
+                // Başlıkları Daktilo Efektiyle Yazdır
                 typeWriter("mainTitle", config.title, 90, () => {
                     typeWriter("mainSubtitle", config.subtitle, 50, () => {
                         document.getElementById('btnGroup').style.opacity = '1';
@@ -126,7 +132,7 @@
                 });
             });
 
-            // --- TROLL BUTON MANTIĞI (HER İKİSİ İÇİN) ---
+            // --- TROLL BUTON & FİNAL ---
             let escapeCount = 0;
             const noTexts = isBirthday ? 
                 ["Emin misin?", "Pasta eridi!", "Yapma be!", "Hadi üfle!", "Tamam pes :)"] : 
@@ -138,7 +144,6 @@
                     const rect = card.getBoundingClientRect();
                     const x = Math.max(10, Math.random() * (rect.width - 120));
                     const y = Math.max(10, Math.random() * (rect.height - 50));
-                    
                     noButton.style.position = 'absolute';
                     noButton.style.left = x + 'px';
                     noButton.style.top = y + 'px';
@@ -152,7 +157,7 @@
             noButton.addEventListener('mouseover', moveButton);
             noButton.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
 
-            // --- EVET BUTONU ---
+            // Evet Butonu
             yesButton.addEventListener('click', () => {
                 mainTitle.innerText = config.yesMsg;
                 mainSubtitle.textContent = isBirthday ? "Mutlu Yıllar..." : 'Seninle bir ömür boyu...';
