@@ -25,6 +25,47 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* --- GİRİŞ PERDESİ (YENİ EKLENDİ) --- */
+#startOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.92); /* Arkası neredeyse tamamen siyah */
+    z-index: 9999; /* En üstte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 1s ease;
+}
+
+.start-btn {
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    animation: pulse 2s infinite; /* Nefes alma efekti */
+}
+
+.start-btn:hover {
+    background: white;
+    color: #333;
+    transform: scale(1.1);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
 /* Arka Plan Üzerine Hafif Karanlık Katman */
 .background-overlay {
     position: fixed;
@@ -116,13 +157,14 @@ body {
     font-weight: 700;
     margin-bottom: 5px;
     text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    min-height: 40px;
+    min-height: 40px; /* Daktilo efekti sırasında kaymayı önler */
 }
 
 .subtitle {
     color: rgba(255,255,255,0.9);
     font-size: 1.1rem;
     font-weight: 500;
+    min-height: 25px; /* Kaymayı önler */
 }
 
 /* --- BUTONLAR --- */
@@ -132,6 +174,9 @@ body {
     margin-top: 25px;
     width: 100%;
     justify-content: center;
+    /* Daktilo efekti bitene kadar gizli kalacak */
+    opacity: 0; 
+    transition: opacity 1s ease;
 }
 
 button {
@@ -160,35 +205,36 @@ button {
     background: rgba(255,255,255,0.2);
     color: white;
     border: 1px solid white;
-    transition: top 0.3s ease, left 0.3s ease; /* Yumuşak kaçış için */
+    position: relative; /* Kaçış animasyonu için gerekli */
+    transition: top 0.3s ease, left 0.3s ease;
 }
-/* --- 3D GALERİ (ÇARK) --- */
+
+/* --- 3D GALERİ (STABİL VE NET) --- */
 .gallery-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    display: flex; 
+    display: none; /* JS ile açılacak */
     justify-content: center;
     align-items: center;
     background: #000;
     overflow: hidden;
-    z-index: 50;
+    z-index: 100;
     opacity: 0;
     transition: opacity 2s ease;
-    perspective: 1000px;
+    perspective: 2000px; /* Daha derin ve geniş açı */
 }
 
 
 .box {
     position: relative;
-    /* Resim boyutlarını görseldeki gibi biraz daha büyük ve dikey yaptık */
     width: 260px;
     height: 340px;
     transform-style: preserve-3d;
-    /* Hafif bir açıyla bakmak için -5 derece tilt verdik */
-    transform: perspective(1500px) rotateX(-15deg);
+    /* Eğim yok, tam karşıdan net bakış */
+    transform: rotateX(0deg);
 }
 
 .dream {
@@ -196,7 +242,6 @@ button {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    /* Dönüş hızını biraz yavaşlattık, daha asil dursun */
     animation: rotate3D 25s linear infinite;
 }
 
@@ -205,7 +250,7 @@ button {
     to { transform: rotateY(360deg); }
 }
 
-/* KRAL BURASI ÇOK ÖNEMLİ: DAİRENİN GENİŞLİĞİ */
+/* FOTOĞRAF DAİRESİ AYARLARI */
 .dream span {
     position: absolute;
     top: 0;
@@ -214,19 +259,17 @@ button {
     height: 100%;
     transform-origin: center;
     transform-style: preserve-3d;
-    transform: rotateY(calc(var(--i) * 45deg)) translateZ(750px);
+    /* Geniş bir daire için 800px mesafe */
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(800px);
 }
 
 .dream span img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Beyaz çerçeveyi kalınlaştırdık */
     border: 5px solid white; 
     border-radius: 15px;
-    /* Parlama efektini artırdık */
     box-shadow: 0 0 40px rgba(255,255,255,0.5); 
-    /* Altındaki yansıma efekti (Görseldeki gibi) */
     -webkit-box-reflect: below 15px linear-gradient(transparent, transparent, rgba(0,0,0,0.3));
 }
 
