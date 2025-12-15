@@ -188,19 +188,33 @@
                 }
             });
 
+            // --- GÜVENLİ HAYIR BUTONU KAÇIRMA (MOBİL UYUMLU) ---
             function moveButton() {
                 if (escapeCount < 5) {
                     noButton.innerText = noTexts[escapeCount];
-                    const rect = card.getBoundingClientRect();
-                    const x = Math.max(10, Math.random() * (rect.width - 120));
-                    const y = Math.max(10, Math.random() * (rect.height - 50));
-                    noButton.style.position = 'absolute'; 
-                    noButton.style.left = x + 'px'; 
+                    
+                    // Kartın sınırlarını al
+                    const cardRect = document.querySelector('.card').getBoundingClientRect();
+                    const btnWidth = noButton.offsetWidth;
+                    const btnHeight = noButton.offsetHeight;
+                    
+                    // Rastgele X ve Y (Buton boyutunu ve güvenli payı hesaba katarak)
+                    // (cardRect.width - btnWidth - 20) demek: Kartın genişliğinden butonun genişliğini ve 20px payı düş
+                    const maxX = cardRect.width - btnWidth - 20;
+                    const maxY = cardRect.height - btnHeight - 20;
+
+                    // Koordinatların 0'dan küçük olmamasını sağla (Math.max)
+                    const x = Math.max(10, Math.random() * maxX);
+                    const y = Math.max(10, Math.random() * maxY);
+                    
+                    noButton.style.position = 'absolute';
+                    noButton.style.left = x + 'px';
                     noButton.style.top = y + 'px';
-                    escapeCount++; 
+                    
+                    escapeCount++;
                 } else {
-                    noButton.style.display = 'none'; 
-                    title.innerText = isBirthday ? "Pastayı üfle artık! 🎂" : "Naz yapma prenses! 😉"; 
+                    noButton.style.display = 'none';
+                    mainTitle.innerText = isBirthday ? "Pastayı üfle artık! 🎂" : "Naz yapma prenses! 😉";
                 }
             }
 
@@ -228,3 +242,4 @@
     </script>
 </body>
 </html>
+
