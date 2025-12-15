@@ -7,7 +7,107 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- KUTLAMA SAYFASI ÖZEL CSS --- */
+        #celebrationPage {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 50px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            overflow-x: hidden;
+        }
+
+        .gallery-section {
+            width: 100%;
+            height: 85vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .timer-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+            z-index: 20;
+        }
+
+        .timeline-section {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            padding: 20px;
+            margin-bottom: 50px;
+        }
+        
+        .timeline-section::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 100%; background: rgba(255, 255, 255, 0.3); border-radius: 2px;
+        }
+
+        .timeline-item {
+            width: 100%; margin-bottom: 40px; position: relative; display: flex; justify-content: center;
+        }
+        
+        .timeline-dot {
+            position: absolute; left: 50%; top: 20px; transform: translateX(-50%);
+            width: 20px; height: 20px; background: #fff; border: 4px solid #e73c7e;
+            border-radius: 50%; z-index: 2; box-shadow: 0 0 15px rgba(231, 60, 126, 0.6);
+        }
+
+        .timeline-content {
+            width: 45%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content { margin-right: auto; text-align: right; }
+        .timeline-item:nth-child(even) .timeline-content { margin-left: auto; text-align: left; }
+
+        .timeline-date { font-size: 0.9rem; font-weight: 700; color: #ffd700; display: block; margin-bottom: 5px; }
+
+        .promises-section {
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 20px;
+        }
+        .promise-card {
+            background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; width: 260px;
+            text-align: center; color: #333; transform: rotate(-2deg); transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .promise-card:nth-child(2) { transform: rotate(2deg); margin-top: 20px; }
+        .promise-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+        .love-timer-container { text-align: center; }
+        .timer-box { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        .time-segment {
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(5px);
+            padding: 10px; border-radius: 10px; min-width: 70px;
+            border: 1px solid rgba(255,255,255,0.3); color: white;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .time-segment span { font-size: 1.5rem; font-weight: 700; }
+        .time-segment label { font-size: 0.7rem; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            .gallery-section { height: 60vh; }
+            .timeline-section::before { left: 20px; }
+            .timeline-dot { left: 20px; }
+            .timeline-content { width: 80%; margin-left: 50px !important; text-align: left !important; }
+            .timeline-item:nth-child(odd) .timeline-content { margin-right: 0; }
+            .promise-card { width: 100%; transform: rotate(0deg) !important; margin-top: 10px !important; }
+        }
+    </style>
 </head>
 <body>
     
@@ -33,14 +133,77 @@
         </div>
     </div> 
 
-    <div class="gallery-container" id="galleryLayer" style="display: none;">
-        <div class="box">
-            <div class="dream" id="photoGallery"></div>
+    <div id="celebrationPage">
+        
+        <div class="gallery-section">
+            <div class="box">
+                <div class="dream" id="photoGallery"></div>
+            </div>
         </div>
+
+        <div class="timer-section" data-aos="fade-up">
+            <h3 style="color:white; font-weight:300; letter-spacing:1px; margin-bottom:10px;">Seninle Geçen Her Saniye...</h3>
+            <div class="love-timer-container">
+                <div class="timer-box">
+                    <div class="time-segment"><span id="t-days">0</span><label>Gün</label></div>
+                    <div class="time-segment"><span id="t-hours">00</span><label>Saat</label></div>
+                    <div class="time-segment"><span id="t-minutes">00</span><label>Dk</label></div>
+                    <div class="time-segment"><span id="t-seconds">00</span><label>Sn</label></div>
+                </div>
+            </div>
+            <div style="margin-top:20px; color:rgba(255,255,255,0.8); font-size:0.9rem; animation: bounce 2s infinite;">
+                <i class="fas fa-chevron-down"></i> Aşağı Kaydır <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date" id="date-meet">Başlangıç</span>
+                    <h3>Hikayemiz Başladı</h3>
+                    <p>Hayatımın en güzel tesadüfü seninle karşılaştığım o gündü...</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">İlk Bakış</span>
+                    <h3>O Büyülü An</h3>
+                    <p>Gözlerine ilk baktığımda evimi bulduğumu hissettim.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">Bugün</span>
+                    <h3>Sonsuzluğa İlk Adım</h3>
+                    <p>Ve bugün, ömrümü seninle birleştirme sözü veriyorum. Seni çok seviyorum.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="promises-section" data-aos="zoom-in">
+            <div class="promise-card">
+                <h3>❤️</h3>
+                <p>Seni her gün, ilk günkü heyecanla seveceğime...</p>
+            </div>
+            <div class="promise-card">
+                <h3>🤝</h3>
+                <p>En zor günlerinde bile elini hiç bırakmayacağıma...</p>
+            </div>
+            <div class="promise-card">
+                <h3>🏡</h3>
+                <p>Huzurlu, mutlu ve aşk dolu bir yuvamız olacağına...</p>
+            </div>
+        </div>
+
+        <h2 style="color:white; margin-bottom: 60px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); text-align:center;">SÖZ VERİYORUM ❤️</h2>
+
     </div>
     
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script> AOS.init({ duration: 1000, once: true }); </script>
+    <script> AOS.init({ duration: 1000, once: false }); </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -69,55 +232,82 @@
                     element.innerHTML += text.charAt(i);
                     i++;
                     setTimeout(type, speed);
-                } else {
-                    if (callback) callback();
-                }
+                } else { if (callback) callback(); }
             }
             type();
+        }
+
+        // --- SAYAÇ FONKSİYONU ---
+        function startLoveTimer(startDateStr) {
+            // Eğer parametre gelirse onu kullan, gelmezse 11.07.2024'ü kullan
+            const targetDate = startDateStr ? new Date(startDateStr).getTime() : new Date("2024-07-11T00:00:00").getTime();
+            
+            // Timeline'daki tarihi güncelle (TR formatında)
+            const dateObj = new Date(targetDate);
+            document.getElementById('date-meet').innerText = dateObj.toLocaleDateString('tr-TR');
+
+            function update() {
+                const now = new Date().getTime();
+                const gap = now - targetDate;
+
+                const d = Math.floor(gap / (1000 * 60 * 60 * 24));
+                const h = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((gap % (1000 * 60)) / 1000);
+
+                document.getElementById('t-days').innerText = d;
+                document.getElementById('t-hours').innerText = h < 10 ? '0'+h : h;
+                document.getElementById('t-minutes').innerText = m < 10 ? '0'+m : m;
+                document.getElementById('t-seconds').innerText = s < 10 ? '0'+s : s;
+            }
+            setInterval(update, 1000);
+            update();
         }
 
         async function loadSiteData() {
             const urlParams = new URLSearchParams(window.location.search);
             const docId = urlParams.get('id');
             
-            // Varsayılan Veriler
+            // VARSAYILAN VERİLER
             let data = {
                 partnerName: "Sevgilim",
                 proposalMessage: "Sonsuza kadar EVET! 💍",
                 theme: "love", 
                 musicUrl: "", 
-                images: Array(8).fill("https://via.placeholder.com/600")
+                images: Array(8).fill("https://picsum.photos/400/600"),
+                // BURASI SENİN İSTEDİĞİN TARİH: 11 TEMMUZ 2024
+                relationshipDate: "2024-07-11T00:00:00" 
             };
 
             if (docId) {
                 try {
                     const docSnap = await getDoc(doc(db, "proposals", docId));
-                    if (docSnap.exists()) data = docSnap.data();
+                    // Veritabanında veri varsa onu çek, yoksa üstteki varsayılan kalır
+                    if (docSnap.exists()) {
+                        const dbData = docSnap.data();
+                        // Eğer veritabanında tarih girilmemişse senin tarihini koru
+                        if(dbData.relationshipDate) {
+                            data = dbData;
+                        } else {
+                            data = { ...dbData, relationshipDate: "2024-07-11T00:00:00" };
+                        }
+                    }
                 } catch (error) { console.error("Hata:", error); }
             }
 
             const isBirthday = data.theme === 'birthday';
 
-            // İkonu Belirle
-            const iconHtml = isBirthday ? 
-                `<div class="cake-wrapper">
-                    <div class="flame"></div>
-                    <img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'">
-                </div>` : 
-                `<div class="ring-animation">
-                    <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">
-                </div>`;
+            // İkon
+            document.getElementById('iconContainer').innerHTML = isBirthday ? 
+                `<div class="cake-wrapper"><div class="flame"></div><img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'"></div>` : 
+                `<div class="ring-animation"><img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img"></div>`;
             
-            document.getElementById('iconContainer').innerHTML = iconHtml;
-
-            // Buton Yazıları
             document.getElementById('yesButton').innerHTML = isBirthday ? "KUTLA 🎉" : "EVET 💍";
             document.getElementById('noButton').innerHTML = isBirthday ? "HAYIR 🎂" : "HAYIR 💔";
 
             // Galeri
             const gallery = document.getElementById('photoGallery');
             const images = (data.images && data.images.length > 0) ? data.images : Array(8).fill("https://picsum.photos/400/600");
-            
             images.forEach((imgUrl, index) => {
                 if(index < 8) {
                     const span = document.createElement('span');
@@ -136,7 +326,6 @@
                     audio.volume = 0.6;
                     audio.play().catch(e => console.log("Ses hatası:", e));
                 }
-
                 const overlay = document.getElementById('startOverlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.style.display = 'none', 1000);
@@ -151,15 +340,15 @@
                 });
             });
 
-            // TROLL BUTON & FİNAL
+            // BUTON MANTIĞI
             initLogic(data, isBirthday);
         }
 
         function initLogic(data, isBirthday) {
             const yesButton = document.getElementById('yesButton');
             const noButton = document.getElementById('noButton');
-            const card = document.querySelector('.card'); 
             const mainContainer = document.getElementById('mainCard');
+            const celebrationPage = document.getElementById('celebrationPage');
             const title = document.querySelector('.title');
             
             let isYesClicked = false;
@@ -172,49 +361,43 @@
                 if (!isYesClicked) {
                     isYesClicked = true;
                     startConfetti(isBirthday ? '🎉' : '❤️');
+                    
                     title.innerText = data.proposalMessage;
                     document.getElementById('mainSubtitle').innerText = isBirthday ? "İyi ki varsın!" : 'Seni dünyanın en mutlu insanı yapacağım...';
                     document.getElementById('btnGroup').style.display = 'none';
                     
                     setTimeout(() => {
                         mainContainer.style.opacity = "0";
-                        const galleryCont = document.getElementById('galleryLayer');
-                        galleryCont.style.display = 'flex'; 
                         setTimeout(() => { 
-                            galleryCont.style.opacity = "1"; 
-                            mainContainer.style.display = "none"; 
+                            mainContainer.style.display = "none";
+                            celebrationPage.style.display = "flex";
+                            setTimeout(() => { 
+                                celebrationPage.style.opacity = "1"; 
+                                // SAYACI BAŞLAT (Burada data.relationshipDate kullanılır)
+                                startLoveTimer(data.relationshipDate);
+                            }, 100);
                         }, 500);
-                    }, 3000); 
+                    }, 2000); 
                 }
             });
 
-            // --- GÜVENLİ HAYIR BUTONU KAÇIRMA (MOBİL UYUMLU) ---
             function moveButton() {
                 if (escapeCount < 5) {
                     noButton.innerText = noTexts[escapeCount];
-                    
-                    // Kartın sınırlarını al
                     const cardRect = document.querySelector('.card').getBoundingClientRect();
                     const btnWidth = noButton.offsetWidth;
                     const btnHeight = noButton.offsetHeight;
-                    
-                    // Rastgele X ve Y (Buton boyutunu ve güvenli payı hesaba katarak)
-                    // (cardRect.width - btnWidth - 20) demek: Kartın genişliğinden butonun genişliğini ve 20px payı düş
                     const maxX = cardRect.width - btnWidth - 20;
                     const maxY = cardRect.height - btnHeight - 20;
-
-                    // Koordinatların 0'dan küçük olmamasını sağla (Math.max)
                     const x = Math.max(10, Math.random() * maxX);
                     const y = Math.max(10, Math.random() * maxY);
-                    
                     noButton.style.position = 'absolute';
                     noButton.style.left = x + 'px';
                     noButton.style.top = y + 'px';
-                    
                     escapeCount++;
                 } else {
                     noButton.style.display = 'none';
-                    mainTitle.innerText = isBirthday ? "Pastayı üfle artık! 🎂" : "Naz yapma prenses! 😉";
+                    title.innerText = isBirthday ? "Pastayı üfle artık! 🎂" : "Naz yapma prenses! 😉";
                 }
             }
 
@@ -242,4 +425,3 @@
     </script>
 </body>
 </html>
-
