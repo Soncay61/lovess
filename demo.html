@@ -11,6 +11,10 @@
 </head>
 <body>
     
+    <div id="startOverlay">
+        <button class="start-btn" id="startBtn">Dokun ve Başla ❤️</button>
+    </div>
+
     <div class="background-overlay"></div>
 
     <div class="container" id="mainCard">
@@ -19,11 +23,11 @@
                 <div id="iconWrapper" class="ring-animation" data-aos="fade-down" data-aos-delay="400">
                     </div>
                 
-                <h1 class="title" id="mainTitle" data-aos="fade-up" data-aos-delay="600">Yükleniyor...</h1>
-                <p class="subtitle" id="mainSubtitle" data-aos="fade-up" data-aos-delay="800">Lütfen bekleyin...</p>
+                <h1 class="title" id="mainTitle"></h1>
+                <p class="subtitle" id="mainSubtitle"></p>
             </div>
             
-            <div class="buttons" id="btnGroup" data-aos="fade-up" data-aos-delay="1000">
+            <div class="buttons" id="btnGroup">
                 <button class="btnYes" id="yesButton">EVET</button>
                 <button class="btnNo" id="noButton">HAYIR</button>
             </div>
@@ -32,8 +36,7 @@
 
     <div class="gallery-container" id="galleryLayer" style="display: none;">
         <div class="box">
-            <div class="dream" id="photoGallery">
-                </div>
+            <div class="dream" id="photoGallery"></div>
         </div>
     </div>
     
@@ -41,13 +44,30 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // SAYFA YÜKLENİR YÜKLENMEZ ÇALIŞTIR (Hız için)
+        // --- DAKTİLO EFEKTİ FONKSİYONU ---
+        function typeWriter(elementId, text, speed, callback) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        // HIZLI YÜKLENME İÇİN
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('type') || 'love'; 
             const isBirthday = (type === 'birthday');
 
-            // --- AYARLAR ---
+            // --- DEMO AYARLARI ---
             const config = {
                 title: isBirthday ? "İyi Ki Doğdun Prenses!" : "Benimle Evlenir Misin?",
                 subtitle: isBirthday ? "Yeni yaşın sana huzur ve mutluluk getirsin..." : "Ömrümün geri kalanı olur musun?",
@@ -58,12 +78,11 @@
                 iconHtml: isBirthday ? 
                     `<div class="cake-wrapper">
                         <div class="flame"></div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/3132/3132715.png" class="cake-img">
+                        <img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'">
                     </div>` : 
                     `<img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img">`
             };
 
-            // DOM'un hazır olmasını bekle ama verileri hızlıca hazırla
             window.addEventListener('DOMContentLoaded', () => {
                 const mainTitle = document.getElementById('mainTitle');
                 const mainSubtitle = document.getElementById('mainSubtitle');
@@ -73,14 +92,12 @@
                 const photoGallery = document.getElementById('photoGallery');
                 const card = document.querySelector('.card');
 
-                // İçeriği Giydir
-                mainTitle.innerText = config.title;
-                mainSubtitle.innerText = config.subtitle;
+                // İkonu ve Butonları Yerleştir
                 iconWrapper.innerHTML = config.iconHtml;
                 yesButton.innerHTML = config.btnYesText;
                 noButton.innerHTML = config.btnNoText;
 
-                // Galeriyi Oluştur (View'daki o meşhur span yapısı)
+                // Galeriyi Doldur (Demo Görselleri)
                 for (let i = 1; i <= 8; i++) {
                     const span = document.createElement('span');
                     span.style.setProperty('--i', i);
@@ -90,21 +107,44 @@
                     photoGallery.appendChild(span);
                 }
 
-                // --- HAYIR BUTONU KAÇIRMA (VİEW.HTML MANTIĞI) ---
+                // --- GİRİŞ EKRANI (START BUTTON) ---
+                document.getElementById('startBtn').addEventListener('click', () => {
+                    // Demo olduğu için ses dosyası yoksa boş geçer
+                    // const audio = new Audio('demo-music.mp3'); audio.play();
+
+                    const overlay = document.getElementById('startOverlay');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 1000);
+
+                    // Daktilo Efekti Başlar
+                    typeWriter("mainTitle", config.title, 90, () => {
+                        typeWriter("mainSubtitle", config.subtitle, 50, () => {
+                            document.getElementById('btnGroup').style.opacity = '1';
+                        });
+                    });
+                });
+
+                // --- TROLL BUTON MANTIĞI ---
                 let escapeCount = 0;
+                const noTexts = isBirthday ? 
+                    ["Emin misin?", "Pasta eridi!", "Yapma be!", "Hadi üfle!", "Tamam pes :)"] : 
+                    ["Emin misin?", "Bir daha düşün?", "Son kararın mı?", "Kırma kalbimi...", "Basamazsın ki :)"];
+
                 function moveButton() {
-                    escapeCount++;
-                    if (escapeCount >= 5) {
+                    if (escapeCount < 5) {
+                        noButton.innerText = noTexts[escapeCount];
+                        const rect = card.getBoundingClientRect();
+                        const x = Math.max(10, Math.random() * (rect.width - 120));
+                        const y = Math.max(10, Math.random() * (rect.height - 50));
+                        
+                        noButton.style.position = 'absolute';
+                        noButton.style.left = x + 'px';
+                        noButton.style.top = y + 'px';
+                        escapeCount++;
+                    } else {
                         noButton.style.display = 'none';
                         mainTitle.innerText = isBirthday ? "Pastayı üfle artık! 🎂" : "Naz yapma prenses! 😉";
-                        return;
                     }
-                    const rect = card.getBoundingClientRect();
-                    const x = Math.max(10, Math.random() * (rect.width - 120));
-                    const y = Math.max(10, Math.random() * (rect.height - 50));
-                    noButton.style.position = 'absolute';
-                    noButton.style.left = x + 'px';
-                    noButton.style.top = y + 'px';
                 }
 
                 noButton.addEventListener('mouseover', moveButton);
@@ -113,7 +153,7 @@
                 // --- EVET BUTONU ---
                 yesButton.addEventListener('click', () => {
                     mainTitle.innerText = config.yesMsg;
-                    mainSubtitle.textContent = 'Seninle bir ömür boyu, el ele...';
+                    mainSubtitle.textContent = 'Seninle bir ömür boyu...';
                     document.getElementById('btnGroup').style.display = 'none';
                     
                     startConfetti(config.emoji);
@@ -130,7 +170,7 @@
                 });
 
                 function startConfetti(char) { 
-                    for(let i=0; i<60; i++) {
+                    for(let i=0; i<80; i++) {
                         setTimeout(() => { 
                             const h = document.createElement('div'); 
                             h.className='heart'; 
@@ -138,9 +178,10 @@
                             h.style.left = Math.random() * 100 + 'vw';
                             const duration = Math.random() * 3 + 2; 
                             h.style.animationDuration = duration + 's';
+                            h.style.fontSize = Math.random() * 20 + 20 + 'px';
                             document.body.appendChild(h); 
                             setTimeout(() => h.remove(), duration * 1000);
-                        }, i * 100); 
+                        }, i * 80); 
                     } 
                 }
             });
