@@ -254,7 +254,7 @@ button {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     transform-origin: center; transform-style: preserve-3d;
-    transform: rotateY(calc(var(--i) * 45deg)) translateZ(950px);
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(1000px);
 }
 
 .dream span img {
@@ -317,5 +317,6 @@ button {
     }
     .gallery-container { perspective: 800px; }
 }
+
 
 
