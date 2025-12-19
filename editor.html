@@ -131,7 +131,7 @@
             <h3><i class="fas fa-heart" style="color:#e74c3c"></i> Temel Bilgiler</h3>
             
             <div class="form-group">
-                <label>Konsept Seç</label>
+                <label>Konsept Seç (İçerik Buna Göre Değişir)</label>
                 <div class="theme-grid">
                     <div class="theme-card selected" onclick="selectTheme('love', this)">
                         <i class="fas fa-ring" style="color:#e74c3c"></i><strong>Aşk / Teklif</strong>
@@ -143,18 +143,18 @@
             </div>
 
             <div class="form-group">
-                <label>Partnerinin Adı</label>
+                <label id="lblPartner">Partnerinin Adı</label>
                 <input type="text" id="partnerName" class="input-style" placeholder="Örn: Ayşem, Canım...">
             </div>
 
             <div class="form-group">
-                <label>İlişki Başlangıç Tarihi (Sayaç İçin)</label>
+                <label id="lblDate">İlişki Başlangıç Tarihi (Sayaç İçin)</label>
                 <input type="datetime-local" id="relationshipDate" class="input-style">
-                <small style="color:#888; font-size:11px;">Buraya girdiğin tarih ve saatten itibaren sayaç çalışacak.</small>
+                <small style="color:#888; font-size:11px;" id="lblDateSmall">Buraya girdiğin tarih ve saatten itibaren sayaç çalışacak.</small>
             </div>
 
             <div class="form-group" style="margin-bottom: 0;">
-                <label>Ana Mesaj (Evet/Hayır Ekranı)</label>
+                <label id="lblMsg">Ana Mesaj (Evet/Hayır Ekranı)</label>
                 <textarea id="proposalMessage" class="input-style" rows="2" placeholder="Örn: Benimle evlenir misin?"></textarea>
             </div>
         </div>
@@ -162,13 +162,13 @@
         <div class="step-content" id="step2">
             <h3><i class="fas fa-history" style="color:#f1c40f"></i> Hikaye Tüneli</h3>
             <p style="font-size:13px; color:#666; margin-bottom:20px; background:#f1f5f9; padding:10px; border-radius:8px;">
-                Aşağıdaki 3 önemli anı kendi hikayenize göre düzenleyebilirsin. Varsayılan olarak güzel sözler yazdık.
+                Seçtiğin temaya göre varsayılan metinler aşağıdadır. İstersen değiştirebilirsin.
             </p>
 
             <div class="timeline-editor-box">
-                <h4><i class="fas fa-flag-checkered"></i> 1. Başlangıç (Tanışma)</h4>
+                <h4><i class="fas fa-flag-checkered"></i> 1. Aşama (Başlangıç)</h4>
                 <div class="form-group">
-                    <input type="text" id="t1_title" class="input-style" value="Hikayemiz Başladı" placeholder="Başlık">
+                    <input type="text" id="t1_title" class="input-style" value="Hikayemiz Başladı">
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
                     <textarea id="t1_desc" class="input-style" rows="2">Hayatımın en güzel tesadüfü seninle karşılaştığım o gündü...</textarea>
@@ -176,9 +176,9 @@
             </div>
 
             <div class="timeline-editor-box">
-                <h4><i class="fas fa-camera"></i> 2. İlk Anı / İlk Bakış</h4>
+                <h4><i class="fas fa-camera"></i> 2. Aşama (Orta)</h4>
                 <div class="form-group">
-                    <input type="text" id="t2_title" class="input-style" value="O Büyülü An" placeholder="Başlık">
+                    <input type="text" id="t2_title" class="input-style" value="O Büyülü An">
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
                     <textarea id="t2_desc" class="input-style" rows="2">Gözlerine ilk baktığımda evimi bulduğumu hissettim.</textarea>
@@ -186,9 +186,9 @@
             </div>
 
             <div class="timeline-editor-box">
-                <h4><i class="fas fa-infinity"></i> 3. Bugün / Teklif Günü</h4>
+                <h4><i class="fas fa-infinity"></i> 3. Aşama (Final)</h4>
                 <div class="form-group">
-                    <input type="text" id="t3_title" class="input-style" value="Sonsuzluğa İlk Adım" placeholder="Başlık">
+                    <input type="text" id="t3_title" class="input-style" value="Sonsuzluğa İlk Adım">
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
                     <textarea id="t3_desc" class="input-style" rows="2">Ve bugün, ömrümü seninle birleştirme sözü veriyorum.</textarea>
@@ -341,14 +341,60 @@
             nextBtn.style.background = "linear-gradient(to right, #48bb78, #38a169)";
         } else {
             nextBtn.innerHTML = 'Devam Et <i class="fas fa-arrow-right"></i>';
-            nextBtn.style.background = ""; // Reset to default CSS
+            nextBtn.style.background = ""; // Reset
         }
     }
 
+    // --- TEMA SEÇİMİ VE OTOMATİK METİN DEĞİŞİMİ ---
     window.selectTheme = (t, el) => {
         selectedTheme = t;
         document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
+
+        // KRAL ÖZELLİK BURADA: Metinleri temaya göre değiştiriyoruz
+        if(t === 'birthday') {
+            document.getElementById('lblPartner').innerText = "Doğum Günü Çocuğunun Adı";
+            document.getElementById('partnerName').placeholder = "Örn: Canım Arkadaşım, Aşkım...";
+            
+            document.getElementById('lblDate').innerText = "Doğum Tarihi (Yaş Sayacı İçin)";
+            document.getElementById('lblDateSmall').innerText = "Bu tarihe göre 'Dünyayı Güzelleştirdiğin Süre' hesaplanacak.";
+            
+            document.getElementById('lblMsg').innerText = "Kutlama Mesajı";
+            document.getElementById('proposalMessage').placeholder = "Örn: İyi ki doğdun, iyi ki varsın!";
+            document.getElementById('proposalMessage').value = "İyi ki doğdun! Nice mutlu yaşlara... 🎂";
+
+            // Timeline Defaultları
+            document.getElementById('t1_title').value = "Dünyaya Merhaba";
+            document.getElementById('t1_desc').value = "Senin doğduğun gün, dünya daha güzel bir yer oldu.";
+            
+            document.getElementById('t2_title').value = "En Güzel Anılar";
+            document.getElementById('t2_desc').value = "Birlikte biriktirdiğimiz onca güzel anıdan sadece biri...";
+            
+            document.getElementById('t3_title').value = "Yeni Yaşın";
+            document.getElementById('t3_desc').value = "Yeni yaşında tüm dileklerinin gerçekleşmesini diliyorum.";
+        
+        } else {
+            // Aşk Modu (Varsayılan)
+            document.getElementById('lblPartner').innerText = "Partnerinin Adı";
+            document.getElementById('partnerName').placeholder = "Örn: Ayşem, Canım...";
+            
+            document.getElementById('lblDate').innerText = "İlişki Başlangıç Tarihi";
+            document.getElementById('lblDateSmall').innerText = "Bu tarihten itibaren aşk sayacı çalışacak.";
+
+            document.getElementById('lblMsg').innerText = "Ana Mesaj (Evet/Hayır Ekranı)";
+            document.getElementById('proposalMessage').placeholder = "Örn: Benimle evlenir misin?";
+            document.getElementById('proposalMessage').value = ""; // Kullanıcı kendi yazsın
+
+            // Timeline Defaultları
+            document.getElementById('t1_title').value = "Hikayemiz Başladı";
+            document.getElementById('t1_desc').value = "Hayatımın en güzel tesadüfü seninle karşılaştığım o gündü...";
+            
+            document.getElementById('t2_title').value = "O Büyülü An";
+            document.getElementById('t2_desc').value = "Gözlerine ilk baktığımda evimi bulduğumu hissettim.";
+            
+            document.getElementById('t3_title').value = "Sonsuzluğa İlk Adım";
+            document.getElementById('t3_desc').value = "Ve bugün, ömrümü seninle birleştirme sözü veriyorum.";
+        }
     };
 
     // --- FOTOĞRAF MANTIĞI ---
@@ -397,7 +443,7 @@
 
         try {
             // Müzik Yükle
-            let musicUrl = selectedTheme === 'birthday' ? "" : "";
+            let musicUrl = "";
             const musicFile = document.getElementById('musicFile').files[0];
             if(musicFile) {
                 status.innerHTML = '🎵 Müzik sunucuya yükleniyor...';
