@@ -74,16 +74,14 @@
 
         .card-img { 
             height: 200px; 
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4); 
             display: flex; 
             align-items: center; 
             justify-content: center; 
         }
-        .ring-icon { font-size: 60px; color: white; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
         
         .card-content { padding: 25px; text-align: center; }
         .card-title { font-size: 1.4rem; margin-bottom: 10px; font-weight: 600; color: #333; }
-        .card-desc { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 20px; }
+        .card-desc { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 20px; min-height: 40px; }
         
         .btn-preview { 
             display: inline-block; 
@@ -96,7 +94,7 @@
             font-weight: 600; 
             transition: 0.3s; 
         }
-        .btn-preview:hover { background: #2980b9; }
+        .btn-preview:hover { opacity: 0.9; }
 
         @media (max-width: 768px) {
             header h1 { font-size: 2rem; }
@@ -112,32 +110,46 @@
 
     <header>
         <h1>Sevdiklerinize Özel<br>Sürpriz Siteler Yapın</h1>
-        <p>Kodlama bilmeden, sadece fotoğraf yükleyerek aşkını ilan et. Hemen aşağıdaki demoyu incele!</p>
+        <p>Kodlama bilmeden, sadece fotoğraf yükleyerek aşkını ilan et veya doğum gününü kutla. Hemen örnekleri incele!</p>
         <button id="heroBtn" class="btn-action" style="padding: 15px 40px; font-size: 1.1rem;">
             <i class="fas fa-magic"></i> Kendi Projeni Oluştur
         </button>
     </header>
 
     <section class="showcase-section">
-        <h2 class="section-title">✨ Örnek Tasarım</h2>
+        <h2 class="section-title">✨ Örnek Tasarımlar</h2>
         
         <div class="projects-grid">
+            
             <div class="project-card">
-                <span class="demo-badge"><i class="fas fa-star"></i> DEMO</span>
-                <div class="card-img">
-                    <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" width="80" alt="Yüzük">
+                <span class="demo-badge" style="background: #e73c7e;"><i class="fas fa-heart"></i> AŞK</span>
+                <div class="card-img" style="background: linear-gradient(45deg, #ff9a9e, #fad0c4);">
+                    <img src="https://pngimg.com/uploads/ring/ring_PNG26.png" width="90" alt="Yüzük" style="filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">Evlilik Teklifi</h3>
-                    <p class="card-desc">İnteraktif, müzikli ve 3D galerili efsane bir tasarım örneği.</p>
-                    
-                    <a href="demo.html" target="_blank" class="btn-preview">
-                        <i class="fas fa-eye"></i> Canlı Önizle
+                    <p class="card-desc">İnteraktif, müzikli, 3D galerili ve romantik bir teklif tasarımı.</p>
+                    <a href="demo.html" target="_blank" class="btn-preview" style="background: #e73c7e;">
+                        <i class="fas fa-eye"></i> İncele
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <span class="demo-badge" style="background: #9b59b6;"><i class="fas fa-birthday-cake"></i> KUTLAMA</span>
+                <div class="card-img" style="background: linear-gradient(45deg, #85FFBD, #FFFB7D);">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2682/2682431.png" width="80" alt="Pasta" style="filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Doğum Günü</h3>
+                    <p class="card-desc">Eğlenceli, konfetili, pastalı ve dilek kartlı kutlama tasarımı.</p>
+                    <a href="demo.html?type=birthday" target="_blank" class="btn-preview" style="background: #9b59b6;">
+                        <i class="fas fa-eye"></i> İncele
                     </a>
                 </div>
             </div>
             
-            </div>
+        </div>
     </section>
 
     <script type="module">
