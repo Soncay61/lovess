@@ -142,7 +142,7 @@
         </div>
 
         <div class="timer-section" data-aos="fade-up">
-            <h3 style="color:white; font-weight:300; letter-spacing:1px; margin-bottom:10px;">Seninle Geçen Her Saniye...</h3>
+            <h3 id="timerTitle" style="color:white; font-weight:300; letter-spacing:1px; margin-bottom:10px;">Seninle Geçen Her Saniye...</h3>
             <div class="love-timer-container">
                 <div class="timer-box">
                     <div class="time-segment"><span id="t-days">0</span><label>Gün</label></div>
@@ -161,29 +161,29 @@
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
                     <span class="timeline-date" id="date-meet">Başlangıç</span>
-                    <h3>Hikayemiz Başladı</h3>
-                    <p>Hayatımın en güzel tesadüfü seninle karşılaştığım o gündü...</p>
+                    <h3 id="t1-head">Hikayemiz Başladı</h3>
+                    <p id="t1-body">Hayatımın en güzel tesadüfü seninle karşılaştığım o gündü...</p>
                 </div>
             </div>
             <div class="timeline-item" data-aos="fade-left">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="timeline-date">İlk Bakış</span>
-                    <h3>O Büyülü An</h3>
-                    <p>Gözlerine ilk baktığımda evimi bulduğumu hissettim.</p>
+                    <span class="timeline-date">Özel An</span>
+                    <h3 id="t2-head">O Büyülü An</h3>
+                    <p id="t2-body">Gözlerine ilk baktığımda evimi bulduğumu hissettim.</p>
                 </div>
             </div>
             <div class="timeline-item" data-aos="fade-right">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
                     <span class="timeline-date">Bugün</span>
-                    <h3>Sonsuzluğa İlk Adım</h3>
-                    <p>Ve bugün, ömrümü seninle birleştirme sözü veriyorum. Seni çok seviyorum.</p>
+                    <h3 id="t3-head">Sonsuzluğa İlk Adım</h3>
+                    <p id="t3-body">Ve bugün, ömrümü seninle birleştirme sözü veriyorum.</p>
                 </div>
             </div>
         </div>
 
-        <div class="promises-section" data-aos="zoom-in">
+        <div class="promises-section" data-aos="zoom-in" id="bottomCards">
             <div class="promise-card">
                 <h3>❤️</h3>
                 <p>Seni her gün, ilk günkü heyecanla seveceğime...</p>
@@ -198,7 +198,7 @@
             </div>
         </div>
 
-        <h2 style="color:white; margin-bottom: 60px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); text-align:center;">SÖZ VERİYORUM ❤️</h2>
+        <h2 id="finalText" style="color:white; margin-bottom: 60px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); text-align:center;">SÖZ VERİYORUM ❤️</h2>
 
     </div>
     
@@ -239,8 +239,8 @@
 
         // --- SAYAÇ FONKSİYONU ---
         function startLoveTimer(startDateStr) {
-            // Eğer parametre gelirse onu kullan, gelmezse 11.07.2024'ü kullan
-            const targetDate = startDateStr ? new Date(startDateStr).getTime() : new Date("2024-07-11T00:00:00").getTime();
+            // Eğer veri yoksa şu anı al
+            const targetDate = startDateStr ? new Date(startDateStr).getTime() : new Date().getTime();
             
             // Timeline'daki tarihi güncelle (TR formatında)
             const dateObj = new Date(targetDate);
@@ -268,36 +268,27 @@
             const urlParams = new URLSearchParams(window.location.search);
             const docId = urlParams.get('id');
             
-            // VARSAYILAN VERİLER
+            // VARSAYILAN BOŞ VERİLER (Hata vermemesi için)
             let data = {
-                partnerName: "Sevgilim",
-                proposalMessage: "Sonsuza kadar EVET! 💍",
+                partnerName: "Misafir",
+                proposalMessage: "Merhaba!",
                 theme: "love", 
                 musicUrl: "", 
-                images: Array(8).fill("https://picsum.photos/400/600"),
-                // BURASI SENİN İSTEDİĞİN TARİH: 11 TEMMUZ 2024
-                relationshipDate: "2024-07-11T00:00:00" 
+                images: [],
+                relationshipDate: "", 
+                timeline: []
             };
 
             if (docId) {
                 try {
                     const docSnap = await getDoc(doc(db, "proposals", docId));
-                    // Veritabanında veri varsa onu çek, yoksa üstteki varsayılan kalır
-                    if (docSnap.exists()) {
-                        const dbData = docSnap.data();
-                        // Eğer veritabanında tarih girilmemişse senin tarihini koru
-                        if(dbData.relationshipDate) {
-                            data = dbData;
-                        } else {
-                            data = { ...dbData, relationshipDate: "2024-07-11T00:00:00" };
-                        }
-                    }
+                    if (docSnap.exists()) data = docSnap.data();
                 } catch (error) { console.error("Hata:", error); }
             }
 
             const isBirthday = data.theme === 'birthday';
 
-            // İkon
+            // 1. İKON ve RENKLER
             document.getElementById('iconContainer').innerHTML = isBirthday ? 
                 `<div class="cake-wrapper"><div class="flame"></div><img src="https://i.ibb.co/2Z7fVfM/cake-icon.png" class="cake-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2682/2682431.png'"></div>` : 
                 `<div class="ring-animation"><img src="https://pngimg.com/uploads/ring/ring_PNG26.png" class="ring-img"></div>`;
@@ -305,7 +296,35 @@
             document.getElementById('yesButton').innerHTML = isBirthday ? "KUTLA 🎉" : "EVET 💍";
             document.getElementById('noButton').innerHTML = isBirthday ? "HAYIR 🎂" : "HAYIR 💔";
 
-            // Galeri
+            // 2. TIMELINE VERİLERİ (Varsa doldur)
+            if (data.timeline && data.timeline.length >= 3) {
+                document.getElementById('t1-head').innerText = data.timeline[0].title;
+                document.getElementById('t1-body').innerText = data.timeline[0].desc;
+                
+                document.getElementById('t2-head').innerText = data.timeline[1].title;
+                document.getElementById('t2-body').innerText = data.timeline[1].desc;
+                
+                document.getElementById('t3-head').innerText = data.timeline[2].title;
+                document.getElementById('t3-body').innerText = data.timeline[2].desc;
+            }
+
+            // 3. DOĞUM GÜNÜ İSE ÖZELLEŞTİR
+            if(isBirthday) {
+                // Sayaç Başlığı
+                document.getElementById('timerTitle').innerText = "Dünyayı Güzelleştirdiğin Süre...";
+                
+                // Alt Kartlar (Dilekler)
+                document.getElementById('bottomCards').innerHTML = `
+                    <div class="promise-card"><h3>💊</h3><p>Yeni yaşında sağlık seninle olsun...</p></div>
+                    <div class="promise-card"><h3>🚀</h3><p>Tüm hayallerine ulaşmanı dilerim...</p></div>
+                    <div class="promise-card"><h3>🥳</h3><p>Yüzünden gülücükler hiç eksik olmasın...</p></div>
+                `;
+                
+                // Final Yazısı
+                document.getElementById('finalText').innerText = "İYİ Kİ DOĞDUN! 🎂";
+            }
+
+            // Galeri (Resim yoksa placeholder)
             const gallery = document.getElementById('photoGallery');
             const images = (data.images && data.images.length > 0) ? data.images : Array(8).fill("https://picsum.photos/400/600");
             images.forEach((imgUrl, index) => {
