@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası | DreamWeb Studio - Kelimem</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1; 
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        p {
+            color: var(--text-gray);
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        ul {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            color: var(--text-gray);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; }
+            h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Gizlilik Politikası</h1>
+        <p class="last-updated">Son Güncelleme: <span id="date"></span></p>
+
+        <h2>1. Giriş</h2>
+        <p>
+            <strong>DreamWeb Studio</strong> tarafından geliştirilen <strong>Kelimem</strong> uygulaması olarak gizliliğinize büyük önem veriyoruz. 
+            Bu Gizlilik Politikası, mobil uygulamamızı kullandığınızda hangi verilerin toplandığını, bu verilerin nasıl kullanıldığını ve güvenliğinin nasıl sağlandığını açıklar.
+        </p>
+
+        <h2>2. Toplanan Bilgiler</h2>
+        <p>Kelimem oyun deneyimini iyileştirmek için aşağıdaki bilgileri toplayabiliriz:</p>
+        <ul>
+            <li><strong>Oyun İlerleme Verileri:</strong> Tamamladığınız bölümler, kazandığınız elmaslar ve puanlar.</li>
+            <li><strong>Cihaz Bilgileri:</strong> Cihaz modeli, işletim sistemi versiyonu ve hata raporları (uygulama kararlılığını ölçmek için).</li>
+            <li><strong>Reklam Tanımlayıcıları:</strong> Google AdMob gibi hizmetler üzerinden size uygun reklamlar sunabilmek için cihazınıza ait reklam kimliği kullanılır.</li>
+            <li><strong>Kimlik Doğrulama:</strong> Eğer bulut kayıt özelliğini kullanıyorsanız, hesabınızı eşlemek için e-posta adresiniz Firebase Auth üzerinden işlenebilir.</li>
+        </ul>
+
+        <h2>3. Bilgilerin Kullanımı</h2>
+        <p>Topladığımız veriler yalnızca aşağıdaki amaçlar doğrultusunda kullanılır:</p>
+        <ul>
+            <li>Oyun ilerlemenizin farklı cihazlarda senkronize edilmesi.</li>
+            <li>Liderlik tablolarının ve skor sıralamalarının yönetilmesi.</li>
+            <li>Uygulama içi hataların tespit edilmesi ve teknik destek sağlanması.</li>
+            <li>Size kişiselleştirilmiş bir reklam deneyimi sunulması.</li>
+        </ul>
+
+        <h2>4. Üçüncü Taraf Hizmetler</h2>
+        <p>
+            Uygulamamız, hizmet kalitesini artırmak için güvenilir üçüncü taraf altyapıları kullanmaktadır. Bu platformların kendi gizlilik politikaları mevcuttur:
+        </p>
+        <ul>
+            <li><strong>Google Firebase:</strong> Veri depolama, kullanıcı analitiği ve bulut kayıt işlemleri için.</li>
+            <li><strong>Google AdMob:</strong> Uygulama içi reklam gösterimleri ve reklam optimizasyonu için.</li>
+        </ul>
+
+        <h2>5. Veri Güvenliği ve Saklama</h2>
+        <p>
+            Verileriniz DreamWeb Studio tarafından endüstri standardı olan şifreleme yöntemleriyle korunmaktadır. Oyun ilerleme verileriniz bulutta güvenli bir şekilde saklanır. Kullanıcılar diledikleri zaman "Hesabı Sil" seçeneği ile tüm verilerinin kalıcı olarak temizlenmesini talep edebilirler.
+        </p>
+
+        <h2>6. Çocukların Gizliliği</h2>
+        <p>
+            Kelimem uygulaması, her yaştan kullanıcı için uygundur. Ancak bilerek 13 yaşın altındaki çocuklardan kişisel bilgi toplamıyoruz. Eğer bir ebeveyn olarak çocuğunuzun bize veri sağladığını fark ederseniz, lütfen bizimle iletişime geçin; gerekli silme işlemlerini derhal gerçekleştireceğiz.
+        </p>
+
+        <h2>7. İletişim</h2>
+        <div class="contact-box">
+            <p style="margin-bottom: 5px; color: var(--text-dark); font-weight: 600;">Yardıma mı ihtiyacınız var?</p>
+            <p>Gizlilik haklarınızla ilgili tüm soru ve talepleriniz için bize ulaşın:</p>
+            <a href="mailto:destek@dreamwebstudio.com">destek@dreamwebstudio.com</a> 
+        </div>
+
+        <a href="https://www.dreamwebstudio.com" class="back-btn">← DreamWeb Studio Ana Sayfasına Dön</a>
+    </div>
+
+    <script>
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date').innerText = new Date().toLocaleDateString('tr-TR', options);
+    </script>
+
+</body>
+</html>
